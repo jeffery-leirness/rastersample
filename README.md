@@ -18,15 +18,6 @@ You can install the development version of rastersample from
 devtools::install_github("jeffery-leirness-noaa/rastersample")
 ```
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-library(rastersample)
-## basic example code
-```
-
 ## Disclaimer
 
 This repository is a scientific product and is not official
