@@ -39,40 +39,6 @@ You can install the development version of rastersample from
 ``` r
 # install.packages("devtools")
 devtools::install_github("jeffery-leirness-noaa/rastersample")
-#> Downloading GitHub repo jeffery-leirness-noaa/rastersample@HEAD
-#> rlang        (1.1.5    -> 1.1.6   ) [CRAN]
-#> cli          (3.6.4    -> 3.6.5   ) [CRAN]
-#> rngWELL      (NA       -> 0.10-10 ) [CRAN]
-#> RcppProgress (NA       -> 0.4.2   ) [CRAN]
-#> linprog      (NA       -> 0.9-4   ) [CRAN]
-#> lpSolve      (NA       -> 5.6.23  ) [CRAN]
-#> magic        (NA       -> 1.6-1   ) [CRAN]
-#> scales       (1.3.0    -> 1.4.0   ) [CRAN]
-#> randtoolbox  (NA       -> 2.0.5   ) [CRAN]
-#> geometry     (NA       -> 0.5.2   ) [CRAN]
-#> RcppArmad... (14.4.1-1 -> 14.4.2-1) [CRAN]
-#> reshape2     (NA       -> 1.4.4   ) [CRAN]
-#> MBHdesign    (NA       -> 2.3.15  ) [CRAN]
-#> clhs         (NA       -> 0.9.0   ) [CRAN]
-#> Installing 14 packages: rlang, cli, rngWELL, RcppProgress, linprog, lpSolve, magic, scales, randtoolbox, geometry, RcppArmadillo, reshape2, MBHdesign, clhs
-#> Installing packages into '/usr/local/lib/R/site-library'
-#> (as 'lib' is unspecified)
-#> ── R CMD build ─────────────────────────────────────────────────────────────────
-#>      checking for file ‘/tmp/Rtmpn6FMd2/remotes1a830a975ee/jeffery-leirness-noaa-rastersample-b5e944c/DESCRIPTION’ ...  ✔  checking for file ‘/tmp/Rtmpn6FMd2/remotes1a830a975ee/jeffery-leirness-noaa-rastersample-b5e944c/DESCRIPTION’
-#>   ─  preparing ‘rastersample’:
-#>    checking DESCRIPTION meta-information ...  ✔  checking DESCRIPTION meta-information
-#>   ─  checking for LF line-endings in source and make files and shell scripts (379ms)
-#>   ─  checking for empty or unneeded directories
-#>        NB: this package now depends on R (>= 4.1.0)
-#>        WARNING: Added dependency on R >= 4.1.0 because package code uses the
-#>      pipe |> or function shorthand \(...) syntax added in R 4.1.0.
-#>      File(s) using such syntax:
-#>        ‘spatial_sample.R’ ‘stratify.R’
-#> ─  building ‘rastersample_0.0.0.9000.tar.gz’
-#>      
-#> 
-#> Installing package into '/usr/local/lib/R/site-library'
-#> (as 'lib' is unspecified)
 ```
 
 ## Usage
