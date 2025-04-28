@@ -40,7 +40,7 @@ The `rastersample` package provides simple functions for sampling spatial data a
 
 You can install the development version of rastersample from [GitHub](https://github.com/) with:
 
-```{r}
+```{r, include = FALSE}
 # install.packages("devtools")
 devtools::install_github("jeffery-leirness-noaa/rastersample")
 ```
