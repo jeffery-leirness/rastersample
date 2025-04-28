@@ -16,18 +16,68 @@ knitr::opts_chunk$set(
 # rastersample
 
 <!-- badges: start -->
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 <!-- badges: end -->
 
-The goal of rastersample is to ...
+## Overview
+
+The `rastersample` package provides simple functions for sampling spatial data according to various sampling methods. It supports working with both tabular data (`data.frame`) and raster data (`SpatRaster`), making it a versatile tool for spatial data analysis and sampling design in ecological and environmental research.
+
+## Features
+
+* Multiple sampling methods:
+  * Random sampling
+  * Biased sampling based on threshold values
+  * Stratified random sampling
+  * Conditioned Latin hypercube sampling
+  * Spatially balanced sampling
+  * Spatially balanced stratified sampling
+* Works with both `data.frame` and `SpatRaster` objects
+* Options to filter NA values before sampling
+* Flexible output as either data frames or rasters
 
 ## Installation
 
 You can install the development version of rastersample from [GitHub](https://github.com/) with:
 
-``` r
+```{r}
 # install.packages("devtools")
 devtools::install_github("jeffery-leirness-noaa/rastersample")
 ```
+
+## Usage
+
+```{r}
+# Create a sample raster
+r <- terra::rast(nrows = 10, ncols = 10, xmin = 0, xmax = 10, ymin = 0,
+                 ymax = 10)
+terra::values(r) <- 1:100
+
+# Take a random sample of 10 cells
+random_sample <- rastersample::spatial_sample(r, n = 10, method = "random")
+
+# Take a biased sample (cells with values > 80)
+biased_sample <- rastersample::spatial_sample(r, n = 5, method = "biased",
+                                              bias_var = "lyr.1",
+                                              bias_thresh = 80)
+
+# Create a stratified raster
+strata <- r
+terra::values(strata) <- rep(1:5, each=20)
+
+# Take a stratified random sample
+stratified_sample <- rastersample::spatial_sample(r, n = 10,
+                                                  method = "stratified",
+                                                  strata_var = "lyr.1")
+
+# Return results as a raster
+sample_rast <- rastersample::spatial_sample(r, n = 10, method = "random", 
+                                            as_raster = TRUE)
+```
+
+## Getting help
+
+If you encounter a bug, please file an issue with a minimal reproducible example on GitHub.
 
 ## Disclaimer
 
