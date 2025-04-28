@@ -8,6 +8,10 @@
 [![Project Status: Active – The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+
+[![Project Status: Active – The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 <!-- badges: end -->
 
 ## Overview
@@ -35,6 +39,36 @@ in ecological and environmental research.
 
 You can install the development version of rastersample from
 [GitHub](https://github.com/) with:
+
+## Usage
+
+``` r
+# Create a sample raster
+r <- terra::rast(nrows = 10, ncols = 10, xmin = 0, xmax = 10, ymin = 0,
+                 ymax = 10)
+terra::values(r) <- 1:100
+
+# Take a random sample of 10 cells
+random_sample <- rastersample::spatial_sample(r, n = 10, method = "random")
+
+# Take a biased sample (cells with values > 80)
+biased_sample <- rastersample::spatial_sample(r, n = 5, method = "biased",
+                                              bias_var = "lyr.1",
+                                              bias_thresh = 80)
+
+# Create a stratified raster
+strata <- r
+terra::values(strata) <- rep(1:5, each=20)
+
+# Take a stratified random sample
+stratified_sample <- rastersample::spatial_sample(r, n = 10,
+                                                  method = "stratified",
+                                                  strata_var = "lyr.1")
+
+# Return results as a raster
+sample_rast <- rastersample::spatial_sample(r, n = 10, method = "random", 
+                                            as_raster = TRUE)
+```
 
 ## Usage
 
