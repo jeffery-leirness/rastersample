@@ -20,16 +20,16 @@ in ecological and environmental research.
 
 ## Features
 
-- Multiple sampling methods:
-  - Random sampling
-  - Biased sampling based on threshold values
-  - Stratified random sampling
-  - Conditioned Latin hypercube sampling
-  - Spatially balanced sampling
-  - Spatially balanced stratified sampling
-- Works with both `data.frame` and `SpatRaster` objects
-- Options to filter NA values before sampling
-- Flexible output as either data frames or rasters
+  - Multiple sampling methods:
+      - Random sampling
+      - Biased sampling based on threshold values
+      - Stratified random sampling
+      - Conditioned Latin hypercube sampling
+      - Spatially balanced sampling
+      - Spatially balanced stratified sampling
+  - Works with both `data.frame` and `SpatRaster` objects
+  - Options to filter NA values before sampling
+  - Flexible output as either data frames or rasters
 
 ## Installation
 
@@ -39,21 +39,6 @@ You can install the development version of rastersample from
 ``` r
 # install.packages("devtools")
 devtools::install_github("jeffery-leirness-noaa/rastersample")
-#> 
-#> ── R CMD build ─────────────────────────────────────────────────────────────────
-#>      checking for file ‘/tmp/RtmpDt1WZ0/remotes1d235e8d1d1/jeffery-leirness-noaa-rastersample-f4ff7a2/DESCRIPTION’ ...  ✔  checking for file ‘/tmp/RtmpDt1WZ0/remotes1d235e8d1d1/jeffery-leirness-noaa-rastersample-f4ff7a2/DESCRIPTION’
-#>   ─  preparing ‘rastersample’:
-#>    checking DESCRIPTION meta-information ...  ✔  checking DESCRIPTION meta-information
-#>   ─  checking for LF line-endings in source and make files and shell scripts
-#>   ─  checking for empty or unneeded directories
-#>        NB: this package now depends on R (>= 4.1.0)
-#>        WARNING: Added dependency on R >= 4.1.0 because package code uses the
-#>      pipe |> or function shorthand \(...) syntax added in R 4.1.0.
-#>      File(s) using such syntax:
-#>        ‘spatial_sample.R’ ‘stratify.R’
-#> ─  building ‘rastersample_0.0.0.9000.tar.gz’
-#>      
-#> 
 ```
 
 ## Usage
