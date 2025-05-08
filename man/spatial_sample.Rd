@@ -2,6 +2,12 @@
 % Please edit documentation in R/spatial_sample.R
 \name{spatial_sample}
 \alias{spatial_sample}
+\alias{spatialsample_random}
+\alias{spatialsample_biased}
+\alias{spatialsample_stratified}
+\alias{spatialsample_clh}
+\alias{spatialsample_balanced}
+\alias{spatialsample_transect}
 \title{Spatial sample}
 \usage{
 spatial_sample(
@@ -14,18 +20,33 @@ spatial_sample(
   clh_iter = NULL,
   strata_var = NULL,
   drop_na = TRUE,
-  as_raster = FALSE
+  as_raster = FALSE,
+  type = "point",
+  control = NULL
 )
+
+spatialsample_random(data, n)
+
+spatialsample_biased(data, n, var, thresh)
+
+spatialsample_stratified(data, n, var)
+
+spatialsample_clh(data, n, var, iter)
+
+spatialsample_balanced(r, n, strata_var = NULL, drop_na = TRUE)
+
+spatialsample_transect(r, n, method, drop_na = TRUE, control = NULL)
 }
 \arguments{
-\item{x}{A \code{data.frame} or \code{SpatRaster} object.}
+\item{x}{A \code{data.frame} or \code{SpatRaster} object. For spatial sampling methods
+('balanced', 'balanced-stratified') and line sampling, a \code{SpatRaster} is required.}
 
 \item{n}{The number of \code{data.frame} rows or \code{SpatRaster} cells to select
 (i.e., the sample size).}
 
 \item{method}{Which sampling method should be used to select the rows?
 \itemize{
-\item \code{"random"} (the default): random sampling via \code{dplyr::slice_sample()}.
+\item \code{"random"} (default): random sampling via \code{dplyr::slice_sample()}.
 \item \code{"biased"}: random sampling of rows for which \code{bias_var} value is greater
 than \code{bias_thresh} via \code{dplyr::slice_sample()}.
 \item \code{"stratified"}: stratified random sampling. Randomly select (n / number
@@ -54,18 +75,82 @@ passed to the \code{iter} argument of \code{clhs::clhs()}.}
 
 \item{strata_var}{The \code{data.frame} column(s) or \code{SpatRaster} layer(s) that
 define the strata for stratified sampling (i.e., when \code{method} is
-\code{"stratafied"} or \code{"balanced-stratified"}).}
+\code{"stratified"} or \code{"balanced-stratified"}).}
 
 \item{drop_na}{Whether or not to exclude \code{data.frame} rows or \code{SpatRaster}
-cells with NA values prior to sampling.}
+cells with NA values prior to sampling. Default is \code{TRUE}.}
 
-\item{as_raster}{Whether or not to return a \code{SpatRaster} object.}
+\item{as_raster}{Whether or not to return a \code{SpatRaster} object. Default is \code{FALSE}.}
+
+\item{type}{The type of sampling to perform. Options are:
+\itemize{
+\item \code{"point"} (default): sample individual points/cells/rows.
+\item \code{"line"}: sample transect lines (requires \code{x} to be a \code{SpatRaster} and
+\code{method} to be either \code{"random"} or \code{"balanced"}).
+}}
+
+\item{control}{A list of additional parameters to pass to
+\code{MBHdesign::transectSamp()}. This argument is only used when \code{type} is
+\code{"line"}.}
 }
 \value{
 Either a \code{data.frame} (tibble) object (if \code{as_raster} is \code{FALSE}) or
 a \code{SpatRaster} object (if \code{as_raster} is \code{TRUE}).
+\itemize{
+\item For point sampling, the returned data frame contains the sampled points with
+their associated values and cell IDs if from a raster.
+\item For line sampling, the returned data frame contains the sampled transect
+points with their coordinates and cell values.
+}
 }
 \description{
 Take a sample of the data (without replacement) according to the specified
-sampling method
+sampling method. This function provides multiple sampling strategies for spatial data,
+ranging from simple random sampling to more sophisticated spatially balanced approaches.
+
+\code{spatialsample_random()} performs simple random sampling from a data frame.
+
+\code{spatialsample_biased()} performs biased sampling where only rows meeting a
+threshold criterion are considered.
+
+\code{spatialsample_stratified()} performs stratified random sampling based on a stratification variable.
+
+\code{spatialsample_clh()} performs conditioned latin hypercube sampling.
+
+\code{spatialsample_balanced()} performs spatially balanced sampling on a SpatRaster.
+If \code{strata_var} is provided, it performs stratified spatially balanced sampling.
+
+\code{spatialsample_transect()} performs transect-based sampling on a SpatRaster.
 }
+\examples{
+\dontrun{
+library(terra)
+
+# Create a sample raster
+r <- rast(nrows = 100, ncols = 100)
+values(r) <- 1:ncell(r)
+
+# Simple random sampling
+samples <- spatial_sample(r, n = 10, method = "random")
+
+# Spatially balanced sampling
+balanced_samples <- spatial_sample(r, n = 10, method = "balanced")
+
+# Stratified sampling using a categorical raster
+r_strata <- r
+values(r_strata) <- sample(LETTERS[1:5], ncell(r), replace = TRUE)
+strat_samples <- spatial_sample(r, n = 50, method = "stratified",
+                                strata_var = "lyr.1")
+
+# Line sampling
+transects <- spatial_sample(r, n = 5, method = "balanced", type = "line")
+}
+
+}
+\seealso{
+\code{\link[dplyr]{slice_sample}} for the underlying random sampling function.
+\code{\link[clhs]{clhs}} for conditioned latin hypercube sampling.
+\code{\link[MBHdesign]{quasiSamp}} for spatially balanced sampling.
+\code{\link[MBHdesign]{transectSamp}} for transect sampling.
+}
+\keyword{internal}
