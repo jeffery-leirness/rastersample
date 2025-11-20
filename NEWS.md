@@ -1,4 +1,4 @@
-# rastersample (development version)
+# rastersample 0.1.1
 
 ## Documentation
 
