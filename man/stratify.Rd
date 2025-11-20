@@ -17,7 +17,7 @@ of the data values. If \code{TRUE} (the default), \code{probs} and \code{vals} s
 be \code{NULL}.}
 
 \item{probs}{A numeric vector of probabilities, sorted increasingly, for the
-cut points with values in \link{0,1}. The length of this vector should equal
+cut points with values between 0 and 1. The length of this vector should equal
 \code{n_strata} - 1.}
 
 \item{vals}{A numeric vector of break point values, sorted increasingly. The

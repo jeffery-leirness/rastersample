@@ -89,17 +89,46 @@
 #' @importFrom MBHdesign quasiSamp transectSamp
 #'
 #' @export
-spatial_sample <- function(x, n, method, bias_var = NULL, bias_thresh = NULL, clh_var = NULL, clh_iter = NULL, strata_var = NULL, drop_na = TRUE, as_raster = FALSE, type = "point", control = NULL) {
-
+spatial_sample <- function(
+  x,
+  n,
+  method,
+  bias_var = NULL,
+  bias_thresh = NULL,
+  clh_var = NULL,
+  clh_iter = NULL,
+  strata_var = NULL,
+  drop_na = TRUE,
+  as_raster = FALSE,
+  type = "point",
+  control = NULL
+) {
   if (method %in% c("balanced", "balanced-stratified")) {
-    stopifnot("if `method` is 'balanced' or 'balanced-stratified', then x must be a SpatRaster" = inherits(x, "SpatRaster"))
+    stopifnot(
+      "if `method` is 'balanced' or 'balanced-stratified', then x must be a SpatRaster" = inherits(
+        x,
+        "SpatRaster"
+      )
+    )
     if (method == "balanced-stratified") {
-      stopifnot("if `method` is 'balanced-stratified', then `strata_var` must be specified" = !is.null(strata_var))
+      stopifnot(
+        "if `method` is 'balanced-stratified', then `strata_var` must be specified" = !is.null(
+          strata_var
+        )
+      )
     }
   }
   if (type == "line") {
-    stopifnot("if `type` is 'line', then x must be a SpatRaster" = inherits(x, "SpatRaster"))
-    stopifnot("if `type` is 'line', then `method` must be either 'random' or 'balanced'" = method %in% c("random", "balanced"))
+    stopifnot(
+      "if `type` is 'line', then x must be a SpatRaster" = inherits(
+        x,
+        "SpatRaster"
+      )
+    )
+    stopifnot(
+      "if `type` is 'line', then `method` must be either 'random' or 'balanced'" = method %in%
+        c("random", "balanced")
+    )
   }
 
   if (drop_na) {
@@ -117,26 +146,44 @@ spatial_sample <- function(x, n, method, bias_var = NULL, bias_thresh = NULL, cl
     }
   }
 
-  if (inherits(x, "SpatRaster") & !(method %in% c("balanced", "balanced-stratified"))) {
+  if (
+    inherits(x, "SpatRaster") &
+      !(method %in% c("balanced", "balanced-stratified"))
+  ) {
     df <- x |>
       terra::as.data.frame(cells = TRUE, na.rm = drop_na) |>
       tibble::as_tibble()
   }
 
   if (type == "line") {
-    samp <- spatialsample_transect(x, n = n, method = method, drop_na = drop_na,
-                                   control = control)
+    samp <- spatialsample_transect(
+      x,
+      n = n,
+      method = method,
+      drop_na = drop_na,
+      control = control
+    )
   } else {
     if (method == "random") {
       samp <- spatialsample_random(df, n = n)
     } else if (method == "biased") {
-      samp <- spatialsample_biased(df, n = n, var = bias_var, thresh = bias_thresh)
+      samp <- spatialsample_biased(
+        df,
+        n = n,
+        var = bias_var,
+        thresh = bias_thresh
+      )
     } else if (method == "stratified") {
       samp <- spatialsample_stratified(df, n = n, var = strata_var)
     } else if (method == "clh") {
       samp <- spatialsample_clh(df, n = n, var = clh_var, iter = clh_iter)
     } else if (method %in% c("balanced", "balanced-stratified")) {
-      samp <- spatialsample_balanced(x, n = n, strata_var = strata_var, drop_na = drop_na)
+      samp <- spatialsample_balanced(
+        x,
+        n = n,
+        strata_var = strata_var,
+        drop_na = drop_na
+      )
     }
   }
 
@@ -147,7 +194,6 @@ spatial_sample <- function(x, n, method, bias_var = NULL, bias_thresh = NULL, cl
   } else {
     samp
   }
-
 }
 
 #' @rdname spatial_sample
@@ -191,8 +237,13 @@ spatialsample_stratified <- function(data, n, var) {
 spatialsample_clh <- function(data, n, var, iter) {
   clh_samp <- data |>
     dplyr::select(dplyr::all_of(var)) |>
-    clhs::clhs(size = n, iter = iter, use.cpp = TRUE, simple = FALSE,
-               progress = TRUE)
+    clhs::clhs(
+      size = n,
+      iter = iter,
+      use.cpp = TRUE,
+      simple = FALSE,
+      progress = TRUE
+    )
   data |>
     dplyr::slice(clh_samp$index_samples)
 }
@@ -211,7 +262,7 @@ spatialsample_balanced <- function(r, n, strata_var = NULL, drop_na = TRUE) {
       dplyr::mutate(.w = 1 / dplyr::n()) |>
       dplyr::ungroup()
     r_ip <- r |>
-      terra::subset(subset = strata_var)  # converting NA's to 0's (as in `balanced` sample above) causes an issue with the raster resulting from terra::set.values() below
+      terra::subset(subset = strata_var) # converting NA's to 0's (as in `balanced` sample above) causes an issue with the raster resulting from terra::set.values() below
     terra::set.values(r_ip, cells = df$cell, values = df$.w * 1e+07)
   } else {
     if (drop_na) {
@@ -221,7 +272,11 @@ spatialsample_balanced <- function(r, n, strata_var = NULL, drop_na = TRUE) {
       terra::values(r_ip) <- 1
     }
   }
-  ba_samp <- MBHdesign::quasiSamp(n = n, dimension = 2, inclusion.probs = r_ip) |>
+  ba_samp <- MBHdesign::quasiSamp(
+    n = n,
+    dimension = 2,
+    inclusion.probs = r_ip
+  ) |>
     tibble::as_tibble()
   r |>
     terra::as.data.frame(cells = TRUE, na.rm = drop_na) |>
@@ -233,7 +288,13 @@ spatialsample_balanced <- function(r, n, strata_var = NULL, drop_na = TRUE) {
 #' @keywords internal
 #' @description
 #' `spatialsample_transect()` performs transect-based sampling on a SpatRaster.
-spatialsample_transect <- function(r, n, method, drop_na = TRUE, control = NULL) {
+spatialsample_transect <- function(
+  r,
+  n,
+  method,
+  drop_na = TRUE,
+  control = NULL
+) {
   if (drop_na) {
     r_ip <- terra::subset(r, subset = 1)
     r_ip[!is.na(r_ip)] <- 1
@@ -251,8 +312,10 @@ spatialsample_transect <- function(r, n, method, drop_na = TRUE, control = NULL)
     "random" ~ "pseudo",
     "balanced" ~ "quasi"
   )
-  control_transect <- list(transect.pattern = "line",
-                           spat.random.type = spat_random_type)
+  control_transect <- list(
+    transect.pattern = "line",
+    spat.random.type = spat_random_type
+  )
   if (!is.null(control)) {
     control_transect <- append(control_transect, control)
   }
@@ -263,7 +326,12 @@ spatialsample_transect <- function(r, n, method, drop_na = TRUE, control = NULL)
     inclusion.probs = df$values,
     control = control_transect
   )
-  cells <- terra::extract(r, dplyr::select(ba_samp$points, x, y), cells = TRUE, ID = FALSE)
+  cells <- terra::extract(
+    r,
+    dplyr::select(ba_samp$points, x, y),
+    cells = TRUE,
+    ID = FALSE
+  )
   dplyr::bind_cols(ba_samp$points, cells) |>
     tibble::as_tibble()
 }

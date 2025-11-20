@@ -42,7 +42,7 @@ You can install the development version of rastersample from [GitHub](https://gi
 
 ```{r, message = FALSE}
 # install.packages("devtools")
-devtools::install_github("jeffery-leirness-noaa/rastersample")
+devtools::install_github("jeffery-leirness/rastersample")
 ```
 
 ## Usage
