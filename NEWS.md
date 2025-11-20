@@ -1,3 +1,11 @@
+# rastersample 0.1.1
+
+## Documentation
+
+* Updated README.Rmd to suppress build messages and warnings in output
+* Updated installation instructions in README
+* Minor corrections to tests/README.md
+
 # rastersample 0.1.0
 
 ## New Features

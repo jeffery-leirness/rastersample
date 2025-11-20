@@ -31,7 +31,7 @@ Tests for the `spatial_sample()` function and its internal helper functions:
   - `spatialsample_biased()`
   - `spatialsample_stratified()`
 
-**Total tests:** 28 tests covering 43 assertions
+**Total tests:** 27 tests covering 43 assertions
 
 ### `test-stratify.R`
 Tests for the `stratify()` function:

@@ -40,14 +40,14 @@ The `rastersample` package provides simple functions for sampling spatial data a
 
 You can install the development version of rastersample from [GitHub](https://github.com/) with:
 
-```{r, message = FALSE}
+```{r, eval = FALSE}
 # install.packages("devtools")
 devtools::install_github("jeffery-leirness/rastersample")
 ```
 
 ## Usage
 
-```{r}
+```{r example, eval = FALSE}
 # Create a sample raster
 r <- terra::rast(nrows = 10, ncols = 10, xmin = 0, xmax = 10, ymin = 0,
                  ymax = 10)
